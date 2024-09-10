@@ -1,11 +1,19 @@
-$PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
-
 Set-Alias vim nvim
 Set-Alias k kubectl
 function QuitReplacoment{ Invoke-command -ScriptBlock {exit} }
 New-Alias -Name :q -Value QuitReplacement
 Set-Alias ipy ipython
 Set-PSReadLineOption -EditMode Vi
+function OnViModeChange {
+    if ($args[0] -eq 'Command') {
+        # Set the cursor to a blinking block.
+        Write-Host -NoNewLine "`e[1 q"
+    } else {
+        # Set the cursor to a blinking line.
+        Write-Host -NoNewLine "`e[5 q"
+    }
+}
+Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler $Function:OnViModeChange
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
