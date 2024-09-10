@@ -1,9 +1,15 @@
-Set-Alias k kubectl
-Set-Alias ipy ipython
-Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+$PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
 
+Set-Alias vim nvim
+Set-Alias k kubectl
+function QuitReplacoment{ Invoke-command -ScriptBlock {exit} }
+New-Alias -Name :q -Value QuitReplacement
+Set-Alias ipy ipython
+Set-PSReadLineOption -EditMode Vi
+Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
+Set-PSReadLineOption -HistorySearchCursorMovesToEnd
 
 function touch
 {
@@ -21,6 +27,10 @@ function touch
         # echo $null > $file
         New-Item -ItemType File -Name ($file)
     }
+}
+
+function gits ([string]$s = '') {
+    git branch --no-color | fzf --query=$s | %{ git switch $_.trim(" ","*") }
 }
 
 function gitacp {
