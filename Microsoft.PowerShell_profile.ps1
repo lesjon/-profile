@@ -4,6 +4,9 @@ function QuitReplacoment{ Invoke-command -ScriptBlock {exit} }
 New-Alias -Name :q -Value QuitReplacement
 Set-Alias ipy ipython
 Set-PSReadLineOption -EditMode Vi
+Set-PSReadLineKeyHandler -Chord "Ctrl+y" -Function AcceptSuggestion
+Set-PSReadLineKeyHandler -Chord "Ctrl+Shift+y" -Function ForwardWord
+
 function OnViModeChange {
     if ($args[0] -eq 'Command') {
         # Set the cursor to a blinking block.
@@ -137,3 +140,9 @@ function mvnw {
     }
 }
 
+function proj([string]$searchTerm = ''){
+    Set-Location c:\Users\l.klute\Documents\projects\;
+    Get-ChildItem -Directory -Name | fzf --query=$searchTerm | Set-Location
+}
+Set-Alias porj proj
+Set-Alias p proj
